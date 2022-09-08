@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.week4chat.R
 import com.example.week4chat.data.ChatListItemModel
 
-class ChatListAdapter(private val chatList: ArrayList<ChatListItemModel>) :
+class ChatListAdapter(
+    private val chatList: ArrayList<ChatListItemModel>,
+    var clickListener: OnChatItemClickListener
+) :
     RecyclerView.Adapter<ChatListAdapter.ChatListViewHolder>() {
 
 
@@ -19,11 +22,7 @@ class ChatListAdapter(private val chatList: ArrayList<ChatListItemModel>) :
     }
 
     override fun onBindViewHolder(holder: ChatListViewHolder, position: Int) {
-        val currentItem = chatList[position]
-        holder.senderName.text = currentItem.senderName
-        holder.messagePreview.text = currentItem.messagePreview
-        holder.messageSendingTime.text = currentItem.messageSendingTime
-        holder.unreadMessageCount.text = currentItem.unreadMessageCount
+        holder.initialize(chatList.get(position), clickListener)
     }
 
     override fun getItemCount(): Int {
@@ -35,5 +34,17 @@ class ChatListAdapter(private val chatList: ArrayList<ChatListItemModel>) :
         val messagePreview: TextView = itemView.findViewById(R.id.messagePreview)
         val messageSendingTime: TextView = itemView.findViewById(R.id.messageSendingTime)
         val unreadMessageCount: TextView = itemView.findViewById(R.id.unreadMessageCount)
+
+        fun initialize(item: ChatListItemModel, action: OnChatItemClickListener) {
+            senderName.text = item.senderName
+            messagePreview.text = item.messagePreview
+            messageSendingTime.text = item.messageSendingTime
+            unreadMessageCount.text = item.unreadMessageCount
+            itemView.setOnClickListener { action.OnItemClick(item, adapterPosition) }
+        }
     }
+}
+
+interface OnChatItemClickListener {
+    fun OnItemClick(item: ChatListItemModel, position: Int)
 }
