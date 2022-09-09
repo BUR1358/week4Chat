@@ -5,6 +5,8 @@
       <map>
         <entry key="app/src/main/res/drawable-v24/notificationCircle.xml" value="0.321" />
         <entry key="app/src/main/res/drawable/circle.xml" value="0.321" />
+        <entry key="app/src/main/res/drawable/messages_background.xml" value="0.1945" />
+        <entry key="app/src/main/res/drawable/my_message_background.xml" value="0.1945" />
         <entry key="app/src/main/res/drawable/notification_circle.xml" value="0.116" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.15729166666666666" />
         <entry key="app/src/main/res/layout/chat_item.xml" value="0.3182291666666667" />
@@ -13,6 +15,9 @@
         <entry key="app/src/main/res/layout/fragment_chat_list.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_chat_list2.xml" value="0.15729166666666666" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3182291666666667" />
+        <entry key="app/src/main/res/layout/fragment_message_list.xml" value="0.3182291666666667" />
+        <entry key="app/src/main/res/layout/message_item.xml" value="0.3171875" />
+        <entry key="app/src/main/res/layout/my_message_item.xml" value="0.3171875" />
       </map>
     </option>
   </component>

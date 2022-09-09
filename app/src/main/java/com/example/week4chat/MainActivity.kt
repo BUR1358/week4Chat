@@ -2,10 +2,9 @@ package com.example.week4chat
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import com.example.week4chat.databinding.ActivityMainBinding
-import com.example.week4chat.fragments.ChatListFragment
+import com.example.week4chat.fragments.chatListFragment
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -13,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        replaceFragment(ChatListFragment())
+        replaceFragment(chatListFragment())
     }
 
     private fun replaceFragment(fragment: Fragment) {
