@@ -6,5 +6,5 @@ data class ChatListItemModel(
     val messageSendingTime: String?,
     val unreadMessageCount: String?,
     val avatarImageResource: Int?,
-    val personMessages: ArrayList<String>?
+    val personMessagesAndTime: ArrayList<ArrayList<String>>
 )

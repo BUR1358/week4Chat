@@ -21,16 +21,10 @@ class messageListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var messageArrayList: ArrayList<MessageItemModel>
 
-
-    lateinit var messageText: Array<String>
-    lateinit var messageSendingTime: Array<String>
-    lateinit var MyMessage: Array<Boolean>
-
-
     var senderName: String? = null
     var personAvatarID: Int? = null
-    var personMessages: ArrayList<String>? = null
-
+    var personMessagesText: ArrayList<String>? = null
+    var personMessagesTime: ArrayList<String>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +33,8 @@ class messageListFragment : Fragment() {
         binding = FragmentMessageListBinding.inflate(inflater, container, false)
         senderName = requireArguments().getString("senderName")
         personAvatarID = requireArguments().getInt("personAvatarID")
-        personMessages = requireArguments().getStringArrayList("personMessages")
+        personMessagesText = requireArguments().getStringArrayList("personMessagesText")
+        personMessagesTime = requireArguments().getStringArrayList("personMessagesTime")
         return binding.root
     }
 
@@ -57,15 +52,17 @@ class messageListFragment : Fragment() {
     }
 
     private fun dataInitialize() {
+        val MyMessage = arrayListOf<Boolean>()
         messageArrayList = arrayListOf<MessageItemModel>()
-        messageSendingTime = arrayOf("10:30", "11:30", "12:30", "13:30")
-        MyMessage = arrayOf(true, false, true, false)
+        for (i in personMessagesText!!){
+            MyMessage.add(false)
+        }
 
 
-        for (i in personMessages!!.indices) {
+        for (i in personMessagesText!!.indices) {
             val messages = MessageItemModel(
-                personMessages!![i],
-                messageSendingTime[i],
+                personMessagesText!![i],
+                personMessagesTime!![i],
                 MyMessage[i]
             )
             messageArrayList.add(messages)

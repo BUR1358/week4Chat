@@ -1,19 +1,24 @@
 package com.example.week4chat.fragments
 
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.week4chat.Adapter.chatListAdapter
 import com.example.week4chat.Adapter.OnChatItemClickListener
 import com.example.week4chat.R
+import com.example.week4chat.data.Repository
 import com.example.week4chat.data.ChatListItemModel
+
 import com.example.week4chat.databinding.FragmentChatListBinding
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 class chatListFragment : Fragment(), OnChatItemClickListener {
     lateinit var binding: FragmentChatListBinding
     private lateinit var adapter: chatListAdapter
@@ -21,15 +26,17 @@ class chatListFragment : Fragment(), OnChatItemClickListener {
     private lateinit var chatArrayList: ArrayList<ChatListItemModel>
 
 
-    lateinit var senderNameList: Array<String>
-    lateinit var messagePreviewList: Array<String>
-    lateinit var messageSendingTimeList: Array<String>
-    lateinit var unreadMessageCountList: Array<String>
+    lateinit var senderNameList: ArrayList<String>
+    lateinit var messagePreviewList: ArrayList<String>
+    lateinit var messageSendingTimeList: ArrayList<String>
+    lateinit var unreadMessageCountList: ArrayList<String>
     lateinit var personAvatarIDList: Array<Int>
     lateinit var personMessagesList: ArrayList<String>
     lateinit var avatarImageResource: Array<Int>
 
     val messageListFragment = messageListFragment()
+
+    val repository = Repository()
     private val argsToChatFragment = Bundle()
 
     override fun onCreateView(
@@ -54,13 +61,8 @@ class chatListFragment : Fragment(), OnChatItemClickListener {
 
     private fun dataInitialize() {
         chatArrayList = arrayListOf<ChatListItemModel>()
-        senderNameList = arrayOf("Саша", "Слава", "Витя", "Настя")
-        messagePreviewList = arrayOf("Здорово", "Привет", "Хай", "Прив")
-        messageSendingTimeList = arrayOf("10:30", "11:30", "12:30", "13:30")
-        unreadMessageCountList = arrayOf("2", "3", "5", "20")
+        senderNameList = repository.getNameList()
         personAvatarIDList = (0..senderNameList.size).map { (0..5).random() }.toTypedArray()
-        personMessagesList = arrayListOf("сообщение 1", "сообщение 2", "сообщение 3", "сообщение 4")
-
         avatarImageResource =
             arrayOf(
                 R.drawable.av1,
@@ -71,15 +73,15 @@ class chatListFragment : Fragment(), OnChatItemClickListener {
                 R.drawable.av6
             )
 
-
         for (i in senderNameList.indices) {
+            val TimeAndMessageList = repository.getTimeAndMessageList()
             val chats = ChatListItemModel(
-                senderNameList[i],
-                messagePreviewList[i],
-                messageSendingTimeList[i],
-                unreadMessageCountList[i],
-                avatarImageResource[personAvatarIDList[i]],
-                personMessagesList
+                senderNameList[i],//имя отправителя
+                TimeAndMessageList[1].last(),//последнее сообщение
+                TimeAndMessageList[0].last(),//время последнего сообщения
+                TimeAndMessageList[1].size.toString(),//количество непрочтенных сообщений
+                avatarImageResource[personAvatarIDList[i]],//ресурс аватара
+                TimeAndMessageList // полный список сообщений и их времени
             )
             chatArrayList.add(chats)
         }
@@ -88,7 +90,8 @@ class chatListFragment : Fragment(), OnChatItemClickListener {
     override fun OnItemClick(item: ChatListItemModel, position: Int) {
         argsToChatFragment.putString("senderName", item.senderName)
         argsToChatFragment.putInt("personAvatarID", item.avatarImageResource!!)
-        argsToChatFragment.putStringArrayList("personMessages", item.personMessages)
+        argsToChatFragment.putStringArrayList("personMessagesText", item.personMessagesAndTime[1])
+        argsToChatFragment.putStringArrayList("personMessagesTime", item.personMessagesAndTime[0])
         messageListFragment.arguments = argsToChatFragment
 
         parentFragmentManager.beginTransaction()
