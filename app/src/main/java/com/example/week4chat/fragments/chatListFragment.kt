@@ -97,6 +97,10 @@ class chatListFragment : Fragment(), OnChatItemClickListener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
+
     private fun swipeToRefresh() {
         val swipeToRefresh = binding.swipeToRefresh
         swipeToRefresh.setOnRefreshListener {

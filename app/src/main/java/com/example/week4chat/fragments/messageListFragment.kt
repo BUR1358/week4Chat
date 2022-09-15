@@ -25,32 +25,19 @@ class messageListFragment : Fragment() {
     private lateinit var adapter: messageAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var messageArrayList: ArrayList<MessageItemModel>
-
-    var senderName: String? = null
-    var personAvatarID: Int? = null
-    var personMessagesText: ArrayList<String>? = null
-    var personMessagesTime: ArrayList<String>? = null
-    private val myMessage = arrayListOf<Boolean>()
-    private val faker = Faker()
     private lateinit var sendButton: ImageButton
     private lateinit var messageEditText: EditText
+    private val faker = Faker()
     private val timeNow: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm"))
-
+    private lateinit var messages: MessageItemModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-
     ): View {
         binding = FragmentMessageListBinding.inflate(inflater, container, false)
+        recyclerView = binding.messageRecycleView
         sendButtonListener()
-        senderName = requireArguments().getString("senderName")
-        personAvatarID = requireArguments().getInt("personAvatarID")
-        personMessagesText = requireArguments().getStringArrayList("personMessagesText")
-        personMessagesTime = requireArguments().getStringArrayList("personMessagesTime")
-        for (i in personMessagesText!!) {
-            myMessage.add(false)
-        }
         return binding.root
     }
 
@@ -63,7 +50,6 @@ class messageListFragment : Fragment() {
 
     private fun connectingAdapter() {
         val layoutManager = LinearLayoutManager(context)
-        recyclerView = binding.messageRecycleView
         recyclerView.layoutManager = layoutManager
         adapter = messageAdapter(messageArrayList)
         recyclerView.adapter = adapter
@@ -71,13 +57,14 @@ class messageListFragment : Fragment() {
 
     private fun messagesDataInitialization() {
         messageArrayList = arrayListOf<MessageItemModel>()
-        binding.senderNamePreview.text = senderName
-        binding.avatarPreviewImage.setImageResource(personAvatarID!!)
-        for (i in personMessagesText!!.indices) {
-            val messages = MessageItemModel(
-                personMessagesText!![i],
-                personMessagesTime!![i],
-                myMessage[i]
+        binding.senderNamePreview.text =
+            requireArguments().getString("senderName") //Прием и установка имени
+        binding.avatarPreviewImage.setImageResource(requireArguments().getInt("personAvatarID")) //Прием и установка аватара
+        for (i in requireArguments().getStringArrayList("personMessagesText")!!.indices) {
+            messages = MessageItemModel(
+                requireArguments().getStringArrayList("personMessagesText")!![i], //Текст сообщения
+                requireArguments().getStringArrayList("personMessagesTime")!![i], //Время сообщения
+                false  //сообщение не от меня
             )
             messageArrayList.add(messages)
         }
@@ -100,19 +87,8 @@ class messageListFragment : Fragment() {
                     }
                 }
             }
-            updateData()
+            recyclerView.adapter = adapter
             swipeToRefresh.isRefreshing = false
-        }
-    }
-
-    private fun updateData() {
-        personMessagesText!!.clear()
-        personMessagesTime!!.clear()
-        myMessage.clear()
-        for (i in messageArrayList.indices){
-            personMessagesText!!.add(messageArrayList[i].messageText)
-            personMessagesTime!!.add(messageArrayList[i].messageSendingTime!!)
-            myMessage.add(messageArrayList[i].MyMessage!!)
         }
     }
 
@@ -120,16 +96,20 @@ class messageListFragment : Fragment() {
         messageEditText = binding.messageEditText
         sendButton = binding.sendMessageImageButton
         sendButton.setOnClickListener {
-            val mySendMessage = MessageItemModel(
-                messageEditText.text.toString(),
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("hh:mm")),
-                true
+            messages = MessageItemModel(
+                messageEditText.text.toString(), //текст сообщения
+                timeNow, //настоящее время
+                true //сообщение от меня
             )
-            messageArrayList.add(mySendMessage)
+            messageArrayList.add(messages)
             messageEditText.text.clear()
             recyclerView.scrollToPosition(messageArrayList.lastIndex)
-            updateData()
+            Log.e("Destroy", messageArrayList.toString())
         }
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e("Destroy", "destroy")
     }
 }
