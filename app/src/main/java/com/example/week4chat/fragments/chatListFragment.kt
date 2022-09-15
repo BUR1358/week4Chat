@@ -24,18 +24,10 @@ class chatListFragment : Fragment(), OnChatItemClickListener {
     private lateinit var adapter: chatListAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var chatArrayList: ArrayList<ChatListItemModel>
-
-
     lateinit var senderNameList: ArrayList<String>
-    lateinit var messagePreviewList: ArrayList<String>
-    lateinit var messageSendingTimeList: ArrayList<String>
-    lateinit var unreadMessageCountList: ArrayList<String>
     lateinit var personAvatarIDList: Array<Int>
-    lateinit var personMessagesList: ArrayList<String>
     lateinit var avatarImageResource: Array<Int>
-
     val messageListFragment = messageListFragment()
-
     val repository = Repository()
     private val argsToChatFragment = Bundle()
 
@@ -49,17 +41,20 @@ class chatListFragment : Fragment(), OnChatItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dataInitialize()
-        val layoutManager = LinearLayoutManager(context)
+        getDataInitialization()
+        connectingAdapter()
+        swipeToRefresh()
+    }
 
-        recyclerView = view.findViewById(R.id.chatRecycleView)
+    private fun connectingAdapter() {
+        val layoutManager = LinearLayoutManager(context)
+        recyclerView = binding.chatRecycleView
         recyclerView.layoutManager = layoutManager
-        //recyclerView.setHasFixedSize(true)
         adapter = chatListAdapter(chatArrayList, this)
         recyclerView.adapter = adapter
     }
 
-    private fun dataInitialize() {
+    private fun getDataInitialization() {
         chatArrayList = arrayListOf<ChatListItemModel>()
         senderNameList = repository.getNameList()
         personAvatarIDList = (0..senderNameList.size).map { (0..5).random() }.toTypedArray()
@@ -94,9 +89,20 @@ class chatListFragment : Fragment(), OnChatItemClickListener {
         argsToChatFragment.putStringArrayList("personMessagesTime", item.personMessagesAndTime[0])
         messageListFragment.arguments = argsToChatFragment
 
-        parentFragmentManager.beginTransaction()
-            .addToBackStack(null)
-            .replace(R.id.mainFrameContainer, messageListFragment)
-            .commit()
+        if (!messageListFragment.isAdded) {
+            parentFragmentManager.beginTransaction()
+                .addToBackStack(null)
+                .add(R.id.mainFrameContainer, messageListFragment)
+                .commit()
+        }
+    }
+
+    private fun swipeToRefresh() {
+        val swipeToRefresh = binding.swipeToRefresh
+        swipeToRefresh.setOnRefreshListener {
+            getDataInitialization()
+            connectingAdapter()
+            swipeToRefresh.isRefreshing = false
+        }
     }
 }
