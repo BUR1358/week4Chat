@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,7 @@ import com.example.week4chat.databinding.FragmentMessageListBinding
 import io.github.serpro69.kfaker.Faker
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 class messageListFragment : Fragment() {
@@ -53,6 +55,9 @@ class messageListFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         adapter = messageAdapter(messageArrayList)
         recyclerView.adapter = adapter
+        val toolbar: Toolbar = binding.toolbar
+        toolbar.setNavigationIcon(com.example.week4chat.R.drawable.arrow_back)
+        toolbar.setNavigationOnClickListener(View.OnClickListener { requireActivity().onBackPressed()})
     }
 
     private fun messagesDataInitialization() {

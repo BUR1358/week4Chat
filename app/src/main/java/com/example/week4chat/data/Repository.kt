@@ -1,7 +1,6 @@
 package com.example.week4chat.data
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import io.github.serpro69.kfaker.Faker
 import java.time.Duration
