@@ -13,7 +13,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.week4chat.Adapter.messageAdapter
+import com.example.week4chat.adapter.MessageAdapter
 import com.example.week4chat.data.MessageItemModel
 import com.example.week4chat.databinding.FragmentMessageListBinding
 import io.github.serpro69.kfaker.Faker
@@ -22,9 +22,9 @@ import java.time.format.DateTimeFormatter
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-class messageListFragment : Fragment() {
-    lateinit var binding: FragmentMessageListBinding
-    private lateinit var adapter: messageAdapter
+class MessageListFragment : Fragment() {
+    private lateinit var binding: FragmentMessageListBinding
+    private lateinit var adapter: MessageAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var messageArrayList: ArrayList<MessageItemModel>
     private lateinit var sendButton: ImageButton
@@ -53,15 +53,15 @@ class messageListFragment : Fragment() {
     private fun connectingAdapter() {
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
-        adapter = messageAdapter(messageArrayList)
+        adapter = MessageAdapter(messageArrayList)
         recyclerView.adapter = adapter
         val toolbar: Toolbar = binding.toolbar
         toolbar.setNavigationIcon(com.example.week4chat.R.drawable.arrow_back)
-        toolbar.setNavigationOnClickListener(View.OnClickListener { requireActivity().onBackPressed()})
+        toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
     }
 
     private fun messagesDataInitialization() {
-        messageArrayList = arrayListOf<MessageItemModel>()
+        messageArrayList = arrayListOf()
         binding.senderNamePreview.text =
             requireArguments().getString("senderName") //Прием и установка имени
         binding.avatarPreviewImage.setImageResource(requireArguments().getInt("personAvatarID")) //Прием и установка аватара
@@ -111,10 +111,5 @@ class messageListFragment : Fragment() {
             recyclerView.scrollToPosition(messageArrayList.lastIndex)
             Log.e("Destroy", messageArrayList.toString())
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.e("Destroy", "destroy")
     }
 }

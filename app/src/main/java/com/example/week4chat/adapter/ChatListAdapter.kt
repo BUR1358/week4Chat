@@ -1,19 +1,22 @@
-package com.example.week4chat.Adapter
+package com.example.week4chat.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.week4chat.R
+import com.example.week4chat.data.ChatDiffCallback
 import com.example.week4chat.data.ChatListItemModel
 
-class chatListAdapter(
+
+class ChatListAdapter(
     private val chatList: ArrayList<ChatListItemModel>,
-    var clickListener: OnChatItemClickListener
+    private var clickListener: OnChatItemClickListener
 ) :
-    RecyclerView.Adapter<chatListAdapter.ChatListViewHolder>() {
+    RecyclerView.Adapter<ChatListAdapter.ChatListViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatListViewHolder {
@@ -30,12 +33,21 @@ class chatListAdapter(
         return chatList.size
     }
 
+    fun addChatList(
+        newChatList: ArrayList<ChatListItemModel>
+    ) {
+        val chatDiffCallback = ChatDiffCallback(chatList, newChatList)
+        val diffResult = DiffUtil.calculateDiff(chatDiffCallback)
+        chatList.addAll(newChatList)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
     class ChatListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val senderName: TextView = itemView.findViewById(R.id.senderName)
-        val messagePreview: TextView = itemView.findViewById(R.id.messagePreview)
-        val messageSendingTime: TextView = itemView.findViewById(R.id.messageSendingTime)
-        val unreadMessageCount: TextView = itemView.findViewById(R.id.unreadMessageCount)
-        val avatarImageResource: ImageView = itemView.findViewById(R.id.avatarImage)
+        private val senderName: TextView = itemView.findViewById(R.id.senderName)
+        private val messagePreview: TextView = itemView.findViewById(R.id.messagePreview)
+        private val messageSendingTime: TextView = itemView.findViewById(R.id.messageSendingTime)
+        private val unreadMessageCount: TextView = itemView.findViewById(R.id.unreadMessageCount)
+        private val avatarImageResource: ImageView = itemView.findViewById(R.id.avatarImage)
 
         fun initialize(item: ChatListItemModel, action: OnChatItemClickListener) {
             senderName.text = item.senderName
@@ -43,12 +55,11 @@ class chatListAdapter(
             messageSendingTime.text = item.messageSendingTime
             unreadMessageCount.text = item.unreadMessageCount
             avatarImageResource.setImageResource(item.avatarImageResource!!)
-
-            itemView.setOnClickListener { action.OnItemClick(item, adapterPosition) }
+            itemView.setOnClickListener { action.onItemClick(item, adapterPosition) }
         }
     }
 }
 
 interface OnChatItemClickListener {
-    fun OnItemClick(item: ChatListItemModel, position: Int)
+    fun onItemClick(item: ChatListItemModel, position: Int)
 }

@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.messageListFragment">
+    tools:context=".fragments.MessageListFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"

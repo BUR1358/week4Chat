@@ -1,6 +1,7 @@
 package com.example.week4chat.data
 
 data class ChatListItemModel(
+    val id: Long,
     val senderName: String?,
     val messagePreview: String?,
     val messageSendingTime: String?,

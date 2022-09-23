@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.week4chat.databinding.ActivityMainBinding
-import com.example.week4chat.fragments.chatListFragment
+import com.example.week4chat.fragments.ChatListFragment
 
 @RequiresApi(Build.VERSION_CODES.O)
 class MainActivity : AppCompatActivity() {
@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        replaceFragment(chatListFragment())
+        replaceFragment(ChatListFragment())
     }
 
     private fun replaceFragment(fragment: Fragment) {
