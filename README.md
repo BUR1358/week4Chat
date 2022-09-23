@@ -1,8 +1,9 @@
 # week4Chat
+
 > Неделя 4: Работа со списками, RecyclerView, DiffUtil, pull to refresh,
 Paging
 
-![image](https://user-images.githubusercontent.com/77270310/191952190-a2b47bc8-fcae-4477-97ed-1191912154e3.png)
+![image](https://user-images.githubusercontent.com/77270310/191953538-110fd70b-9024-4c3e-a1cd-2ee2058ac598.png)
 
 0. Создать новое приложение
 
